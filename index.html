@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chakravarthy Sivlingam Sir - Memory Book</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Georgia', serif;
+        }
+
+        body {
+            background: #1a1a24;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* Screen Management */
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Common Button Styles */
+        .btn {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 30px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        /* Screen 1: Welcome */
+        #welcome-screen h1 {
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Screen 2: Fox GIF */
+        .gif-container {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #000;
+        }
+        .gif-container img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Screen 3: Hardcover Memory Book */
+        .book-container {
+            perspective: 1500px;
+            width: 100%;
+            max-width: 500px;
+            height: 600px;
+            margin: 20px auto;
+        }
+
+        .book {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            margin-left:45%;
+            transition: transform 0.4s ease-out;
+        }
+
+        /* Pages System */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-origin: left center;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+        }
+
+        /* Front & Back sub-pages to give 3D paper thickness look */
+        .page-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: inset 3px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .page-front {
+            background: #fff9e6; /* Soft warm paper tone */
+            z-index: 2;
+        }
+
+        .page-back {
+            background: #fff6df;
+            transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        /* Cover styling (Hardcover Look) */
+        .cover {
+            z-index: 10;
+        }
+        
+        .cover .page-front {
+            /* REPLACE URL BELOW WITH YOUR CUSTOM COVER IMAGE */
+            /*background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://www.google.com/imgres?q=laugh%20symbol%20jpg&imgurl=https%3A%2F%2Fimg.magnific.com%2Fpremium-psd%2Fyellow-smiley-face-with-blue-eyes-blue-ribbon-around-it_1059745-2746.jpg%3Fsemt%3Dais_hybrid%26w%3D740%26q%3D80&imgrefurl=https%3A%2F%2Fwww.magnific.com%2Ffree-photos-vectors%2Flaughing-emoji&docid=Gz61PAhd_yRYeM&tbnid=TjnF1onJZd9m-M&vet=12ahUKEwj_l5zczbuVAxX2ZvUHHV9ZDAMQnPAOegUI_AEQAA..i&w=740&h=740&hcb=2&ved=2ahUKEwj_l5zczbuVAxX2ZvUHHV9ZDAMQnPAOegUI_AEQAA') center/cover;*/
+            border-radius: 0 15px 15px 0;
+            border-left: 10px solid #d9534f;
+            box-shadow: 5px 5px 25px rgba(0,0,0,0.6);
+            justify-content: center;
+            
+        }
+        
+        .cover h2 {
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            border-bottom: 2px solid #fff;
+            padding-bottom: 10px;
+        }
+
+        /* Inside Content Styling */
+        .inner-page {
+            border: 1px solid #e0d7c1;
+            border-radius: 4px;
+        }
+
+        .inner-page .page-front, .inner-page .page-back {
+            background: #fdfbf7;
+            border-left: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .title-thermocouple {
+            font-size: 1.5 rem;
+            color: #d9534f;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        .profile-img {
+            width: 85%;
+            height: 280px;
+            /* REPLACE URL BELOW WITH YOUR PROFILE IMAGE */
+            background: url('https://www.google.com/imgres?q=magnetic%20thermocouple%20image&imgurl=https%3A%2F%2Fimages-na.ssl-images-amazon.com%2Fimages%2FI%2F31duoXmeD0L._UL500_.jpg&imgrefurl=https%3A%2F%2Fwww.whizz.co.ke%2Fproduct%2F21145503%2Fmagnetic-thermocouple-type-k-pt100-200-450-c-handheld-surface-temperature-sensor-dia-20mm-shielded-miniature-connector-color-pt100-l4m-250degree%2F&docid=0onbAXwtpzDTlM&tbnid=2o-emp9GW52BzM&vet=12ahUKEwjig_qp2buVAxWucWwGHa19LtgQnPAOegUIuwIQAA..i&w=500&h=500&hcb=2&itg=1&ved=2ahUKEwjig_qp2buVAxWucWwGHa19LtgQnPAOegUIuwIQAA') center/cover;
+            border: 8px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            border-radius: 4px;
+        }
+
+        .memory-img {
+            width: 90%;
+            height: 220px;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+	.memory-img img{
+            width: 90%;
+            height: 220px;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Custom Memory Pages Styles */
+        .img-1 { background: url('https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=600&auto=format&fit=crop') center/cover; }
+        .img-2 { background: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop') center/cover; }
+
+        .quote {
+            font-style: italic;
+            color: #555;
+            line-height: 1.6;
+            text-align: center;
+            padding: 0 10px;
+        }
+
+        .page-number {
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        /* Animation class applied via JS */
+        .flipped {
+            transform: rotateY(-180deg);
+        }
+
+        /* Hint text below book */
+        .hint {
+            color: #aaa;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: Welcome Page -->
+    <div id="welcome-screen" class="screen active">
+        <h1>Heyyy Hii, <br>The Chakravarthy Sivlingam Sir</h1>
+        <button class="btn" onclick="nextScreen('fox-screen')">Enter</button>
+    </div>
+
+    <!-- SCREEN 2: Fox GIF Page -->
+    <div id="fox-screen" class="screen">
+        <div id="welcome-screen"><h1>LET SEE MANUAL OF STORY</h1></div><br>
+        <div class="gif-container">    
+            <img src="https://www.bing.com/th/id/OGC.66d21c7097cbbcb69cfa173332be69e4?r=0&o=7&cb=thfvnextfalcon4&pid=1.7&rm=3&rurl=https%3a%2f%2fi.gifer.com%2fT19s.gif&ehk=qv70vqoHsux5ujN3oR6l4tRaZOrTC8lIj3hQ55wCyh4%3d" alt="Fox GIF">
+        </div>
+        <button class="btn" onclick="nextScreen('book-screen')">Next</button>
+    </div>
+
+    <!-- SCREEN 3: Memory Book Page -->
+    <div id="book-screen" class="screen">
+        <div class="book-container">
+            <div class="book" id="notebook">
+                
+                <!-- PAGE 1: Hardcover Front Cover -->
+                <div class="page cover" onclick="turnPage(this, 1)">
+                    <div class="page-side page-front">
+                        <h2>JUST CHECK EVERYTHING TILL LAST STRENGTH</h2><br>
+                        <h2>😂😂😂😂😂</h2>
+                        <span style="font-size: 0.9rem; opacity: 0.8;">Click to Open Cover</span>
+                    </div>
+                    <div class="page-side page-back"></div>
+                </div>
+
+                <!-- PAGE 2: First Inside Page (Thermocouple) -->
+                <div class="page inner-page" onclick="turnPage(this, 2)">
+                    <div class="page-side page-front">
+                        <div class="title-thermocouple">Not being rude or jealous even after a lot of roasting is what makes people good friends.We both have good roasting skills 😂😂😂<br>AS YOU KNOW <br> I HATE YOU SO MUCH</div>
+                        <span class="page-number">Page 1</span>
+                    </div>
+                    <div class="page-side page-back">
+                        <h3>The Journey Begins</h3>
+                        <p class="quote">Magnetic thermocouple is so confused… it’s measuring temperature and attraction issues at the same time.<br><br>Congratulations! You discovered its breaking point.<br>😂😂😂😂😂</p>
+                        <p class="quote">Breaking thermocouples is your hobby; losing fuses is mine. Fair trade.<br>😂😂😂😂😂<br><br></p>
+                        <span class="page-number">Page 2</span>
+                    </div>
+                </div>
+
+               <!-- PAGE 3: Additional Memory Page -->
+                <div class="page inner-page" onclick="turnPage(this, 3)">
+                    <div class="page-side page-front">
+                        <h3>Best Moments</h3>
+                        <p class="quote">Kanchrapara ➜ Kancharapada, Go Goal ➜ Go Gobal , Angul ➜ Anagul ... This is OK.😂.<br><br> But
+                        <br><br>Mumbra ➜ Bumrah... This hits different..<br>😂😂😂😂.</p><br>
+                        <p class="quote">Now I also believe......User Matters<br>😂😂😂😂</p>
+                        <span class="page-number">Page 3</span>
+                    </div>
+                    <div class="page-side page-back">
+                        <h3>Best Moments</h3>
+                        <p class="quote">Praggnanandhaa is the GOAT, but don't sleep on Divya Deshmukh—she's ready for every battle too.♟️<br><br>
+                         Every game starts with hope and ends with "Good game."<br>Elllle.....<br>Actually It is ends with "You are playing well"
+                          <br><br> 😂😂😂😂</p>
+                        <span class="page-number">Page 4</span>
+                    </div>
+                </div>
+
+                <!-- PAGE 4: Additional Memory Page -->
+                <div class="page inner-page" onclick="turnPage(this, 3)">
+                    <div class="page-side page-front">
+                        <h3>Best Moments</h3>
+                        <p class="quote">Ratings - 8.5 </p><br>Beacause I cut 0.5 for Taunts and 1 for Tea & Coffee Discussion <br>
+                        😂😂😂😂</p>
+                        <span class="page-number">Page 5</span>
+                    </div>
+                    <div class="page-side page-back">
+                        <h3>Best Moments</h3>
+                        <p class="quote">It was 25 JUNE...SMD DAY😂😂... Special? - COFFEE & rating 9.5 which is more than 8.5.....<br><br>
+                         😂😂😂😂</p>
+                        <span class="page-number">Page 6</span>
+                    </div>
+                </div>
+
+                <!-- PAGE 5: Additional Memory Page -->
+                <div class="page inner-page" onclick="turnPage(this, 3)">
+                    <div class="page-side page-front">
+                        <h3>Best Moments</h3>
+                        <p class="quote">ZOOTOPIA 2..I recommended because the full movie is based on animals.<br>😂😂😂😂😂😂😂😂😂😂😂😂<br><br>
+                         “Fox has a very high opinion of himself.”<br>😂😂😂😂😂😂😂😂😂😂😂😂<br><br> Still I can't stop my laugh <br>😂😂😂😂😂😂😂😂😂😂😂😂
+                          <br><br>I recommend Tangled because the hero is very overconfident about his looks.But It’s fine, because I think folding sleeves also matters
+                         most for being happy <br>😂😂</p>
+                        <span class="page-number">Page 7</span>
+                    </div>
+                    <div class="page-side page-back">
+                        <h3>Best Moments</h3>
+                        <p class="quote">It was 25 JUNE...SMD DAY😂😂... Special? - COFFEE & rating 9.5 which is more than 8.5.....<br><br>
+                         😂😂😂😂</p>
+                        <span class="page-number">Page 8</span>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <!-- PAGE 5: Additional Memory Page -->
+                <div class="page inner-page" onclick="turnPage(this, 3)">
+                    <div class="page-side page-front">
+                        <h3>Best Moments</h3>
+                        <p class="memory-img"><img src="https://images.unsplash.com/photo-1724395369459-678a6f540673?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D.jpeg"></p>
+                        <p class="quote">Now I like Ice-Cream more....</p>
+                        <p class="memory-img"><img src="https://p1.hippopx.com/preview/164/324/888/popsicle-ice-cream-nature-couples.jpg"></p>
+                        <span class="page-number">Page 9</span>
+                    </div>
+                    <div class="page-side page-back">
+                        <h3>Best Moments</h3>
+                        <p class="memory-img"><img src="https://i2.wp.com/www.vegrecipesofindia.com/wp-content/uploads/2014/05/falooda-recipe-1.jpg"></p>
+                        <p class="quote"> FALOODA....WALK....ROASTING😂😂</p>
+                        <p class="memory-img"><img src="https://img.magnific.com/premium-vector/romantic-couple-strolling-hand-hand-scenic-park-vector-illustration_1325322-21957.jpg"></p>
+                        <span class="page-number">Page 10</span>
+                    </div>
+                </div>
+
+
+
+
+                <!-- PAGE 6: Additional Memory Page -->
+                <div class="page inner-page" onclick="turnPage(this, 3)">
+                    <div class="page-side page-front">
+                        <h3>Best Moments</h3>
+                        <p class="memory-img"><img src="https://png.pngtree.com/png-clipart/20240722/original/pngtree-the-couple-is-walking-in-the-rain-with-an-umbrella-png-image_15610251.png"></p>
+                        <p class="quote">RAINY SEASON</p>
+                        
+                        <span class="page-number">Page 11</span>
+                    </div>
+                    <div class="page-side page-back">
+                        <h2 style="color:#d9534f;">TO BE CONTINUE......</h2>
+                        <p>ONLY FUN & HAPPINESS HERE..<br><br>😂😂😂😂😂😂😂😂😂😂</p>
+                        <button class="btn" style="padding:10px 20px; font-size:1rem;" onclick="resetBook(event)">Close Book</button>
+                        <span class="page-number">Page 12</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <p class="hint">Click pages to flip forward and backward</p>
+    </div>
+
+    <script>
+    // Screen Switching logic
+    function nextScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    // Smooth Page Flipping Logic
+    let maxZIndex = 3; 
+
+    // FIX: Automatically set correct z-index when page loads
+    document.addEventListener("DOMContentLoaded", () => {
+        const pages = document.querySelectorAll('.page');
+        pages.forEach((page, index) => {
+            page.style.zIndex = maxZIndex - index;
+        });
+    });
+
+    function turnPage(pageElement, pageNum) {
+        if (!pageElement.classList.contains('flipped')) {
+            // Flip Forward
+            pageElement.classList.add('flipped');
+            // Adjust z-index layers so underlying pages behave dynamically
+            setTimeout(() => {
+                pageElement.style.zIndex = pageNum;
+            }, 300);
+        } else {
+            // Flip Backward
+            pageElement.classList.remove('flipped');
+            setTimeout(() => {
+                pageElement.style.zIndex = maxZIndex - pageNum + 1;
+            }, 100);
+        }
+    }
+
+    // Reset the book back to cover
+    function resetBook(event) {
+        event.stopPropagation(); // Prevents triggering the page flip event simultaneously
+        const pages = document.querySelectorAll('.page');
+        // Loop backwards to close nicely
+        for(let i = pages.length - 1; i >= 0; i--) {
+            setTimeout(() => {
+                pages[i].classList.remove('flipped');
+                pages[i].style.zIndex = maxZIndex - i;
+            }, (pages.length - 1 - i) * 200);
+        }
+    }
+</script>
+</body>
+</html>
