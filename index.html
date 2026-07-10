@@ -468,20 +468,18 @@ Just                    <p class="quote"> Once I read  <br> In English we say <b
             }, (pages.length - 1 - i) * 200);
         }
     }
-// 1. Set your password here
-        const CORRECT_PASSWORD = "Bumrah"; 
+const CORRECT_PASSWORD = "Bumrah"; 
 
-        // 2. Ask the user for the password as soon as the page loads
-        let passwordInput = prompt("Enter the password to read your diary:");
+    let passwordInput = prompt("Enter the password to read your diary:");
 
-        // 3. Check if it matches
-        if (passwordInput === CORRECT_PASSWORD) {
-            // If correct, reveal the diary
-            document.getElementById("diary-content").style.display = "block";
-        } else {
-            // If wrong, alert them and leave the page blank
-            alert("Wrong password! Access denied.");
-        }
+    if (passwordInput === CORRECT_PASSWORD) {
+        // If correct, show the diary
+        document.getElementById("diary-content").style.display = "block";
+    } else {
+        // If wrong or cancelled, alert them and boot them out!
+        alert("Wrong password! Access denied.");
+        window.location.href = "https://www.google.com"; // Redirects away
+    }
 
 
 
