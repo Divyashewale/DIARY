@@ -459,89 +459,89 @@ Just                    <p class="quote"> Once I read  <br> In English we say <b
     </div>
 
     <script>
-	const CORRECT_PASSWORD = "Bumrah"; let passwordInput = prompt("Enter the password to read your diary:");
-		if (passwordInput === CORRECT_PASSWORD) 
-		let passwordInput = prompt("Enter the password to read your diary:"); if (passwordInput === CORRECT_PASSWORD) 
-		{ // If correct, show the diary 
-			document.getElementById("diary-content")
-			.style.display = "block"; } 
-			else { // If wrong or cancelled, alert them and boot them out! 
-			alert("Wrong password! Access denied.");
-			window.location.href = "https://www.google.com"; // Redirects away } 
-			const pages = document.querySelectorAll(".page");
-let currentPage = pages.length - 1; // Open on latest page
-let maxZIndex = pages.length;
 
+const CORRECT_PASSWORD = "Bumrah";
+
+let passwordInput = prompt("Enter the password to read your diary:");
+
+if (passwordInput === CORRECT_PASSWORD) {
+    // If correct, show the diary
+    document.getElementById("diary-content").style.display = "block";
+} else {
+    // If wrong or cancelled
+    alert("Wrong password! Access denied.");
+    window.location.href = "https://www.google.com";
+}
+
+// Screen Switching logic
+function nextScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById(screenId).classList.add('active');
+}
+
+// Smooth Page Flipping Logic
+let maxZIndex = 0;
+
+// Automatically set correct z-index when page loads
 document.addEventListener("DOMContentLoaded", () => {
 
+    const pages = document.querySelectorAll('.page');
+
+    maxZIndex = pages.length;
+
     pages.forEach((page, index) => {
-
         page.style.zIndex = maxZIndex - index;
-
-        // Flip every page except the last one
-        if (index < currentPage) {
-            page.classList.add("flipped");
-        }
-
-        page.onclick = function () {
-            turnPage(index);
-        };
     });
 
-    updateZIndex();
 });
 
-function updateZIndex() {
+function turnPage(pageElement, pageNum) {
 
-    pages.forEach((page, index) => {
+    if (!pageElement.classList.contains('flipped')) {
 
-        if (index < currentPage) {
-            page.style.zIndex = index + 1;
-        } else {
-            page.style.zIndex = maxZIndex - index;
-        }
+        // Flip Forward
+        pageElement.classList.add('flipped');
 
-    });
+        setTimeout(() => {
+            pageElement.style.zIndex = pageNum;
+        }, 300);
 
-}
+    } else {
 
-function turnPage(index) {
+        // Flip Backward
+        pageElement.classList.remove('flipped');
 
-    if (index === currentPage) {
+        setTimeout(() => {
+            pageElement.style.zIndex = maxZIndex - pageNum + 1;
+        }, 100);
 
-        // Previous page
-        pages[index].classList.remove("flipped");
-
-        currentPage--;
-
-        if (currentPage < 0) currentPage = 0;
-
-    } else if (index === currentPage + 1) {
-
-        // Next page
-        pages[index].classList.add("flipped");
-
-        currentPage++;
-
-        if (currentPage > pages.length - 1)
-            currentPage = pages.length - 1;
     }
 
-    updateZIndex();
 }
 
+// Reset the book back to cover
 function resetBook(event) {
 
     event.stopPropagation();
 
-    pages.forEach(page => page.classList.remove("flipped"));
+    const pages = document.querySelectorAll('.page');
 
-    currentPage = 0;
+    // Loop backwards to close nicely
+    for (let i = pages.length - 1; i >= 0; i--) {
 
-    updateZIndex();
+        setTimeout(() => {
+
+            pages[i].classList.remove('flipped');
+            pages[i].style.zIndex = maxZIndex - i;
+
+        }, (pages.length - 1 - i) * 200);
+
+    }
 
 }
-		
+
 </script>
 </body>
 </html>
