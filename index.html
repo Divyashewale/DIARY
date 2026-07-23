@@ -460,95 +460,79 @@ Just                    <p class="quote"> Once I read  <br> In English we say <b
 
     <script>
 		
-const CORRECT_PASSWORD = "Bumrah"; 
-
-    let passwordInput = prompt("Enter the password to read your diary:");
-
-    if (passwordInput === CORRECT_PASSWORD) {
-        // If correct, show the diary
-        document.getElementById("diary-content").style.display = "block";
-    } else {
-        // If wrong or cancelled, alert them and boot them out!
-        alert("Wrong password! Access denied.");
-        window.location.href = "https://www.google.com"; // Redirects away
-    }
-
-document.getElementById("diary-content").style.display = "block";
-nextScreen("book-screen");
-
-    // Screen Switching logic
-    function nextScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(screen => {
-            screen.classList.remove('active');
-        });
-        document.getElementById(screenId).classList.add('active');
-    }
-
-    // Smooth Page Flipping Logic
-    let maxZIndex = document.querySelectorAll(".page").length;
-
-    // FIX: Automatically set correct z-index when page loads
+const pages = document.querySelectorAll(".page");
+let currentPage = pages.length - 1; // Open on latest page
+let maxZIndex = pages.length;
 
 document.addEventListener("DOMContentLoaded", () => {
-    const pages = document.querySelectorAll(".page");
 
-    // Total pages
-    maxZIndex = pages.length;
-
-    // Set initial z-index
     pages.forEach((page, index) => {
+
         page.style.zIndex = maxZIndex - index;
+
+        // Flip every page except the last one
+        if (index < currentPage) {
+            page.classList.add("flipped");
+        }
+
+        page.onclick = function () {
+            turnPage(index);
+        };
     });
 
-    // Open directly to the LAST page
-    for (let i = 0; i < pages.length - 1; i++) {
-        pages[i].classList.add("flipped");
-        pages[i].style.zIndex = i + 1;
-    }
+    updateZIndex();
 });
 
+function updateZIndex() {
 
+    pages.forEach((page, index) => {
 
-
-
-
-
-
-
-
-		
-    function turnPage(pageElement, pageNum) {
-        if (!pageElement.classList.contains('flipped')) {
-            // Flip Forward
-            pageElement.classList.add('flipped');
-            // Adjust z-index layers so underlying pages behave dynamically
-            setTimeout(() => {
-                pageElement.style.zIndex = pageNum;
-            }, 300);
+        if (index < currentPage) {
+            page.style.zIndex = index + 1;
         } else {
-            // Flip Backward
-            pageElement.classList.remove('flipped');
-            setTimeout(() => {
-                pageElement.style.zIndex = maxZIndex - pageNum + 1;
-            }, 100);
+            page.style.zIndex = maxZIndex - index;
         }
+
+    });
+
+}
+
+function turnPage(index) {
+
+    if (index === currentPage) {
+
+        // Previous page
+        pages[index].classList.remove("flipped");
+
+        currentPage--;
+
+        if (currentPage < 0) currentPage = 0;
+
+    } else if (index === currentPage + 1) {
+
+        // Next page
+        pages[index].classList.add("flipped");
+
+        currentPage++;
+
+        if (currentPage > pages.length - 1)
+            currentPage = pages.length - 1;
     }
 
-// Reset the book back to cover
-    function resetBook(event) {
-        event.stopPropagation(); // Prevents triggering the page flip event simultaneously
-        const pages = document.querySelectorAll('.page');
-        // Loop backwards to close nicely
-        for(let i = pages.length - 1; i >= 0; i--) {
-            setTimeout(() => {
-                pages[i].classList.remove('flipped');
-                pages[i].style.zIndex = maxZIndex - i;
-            }, (pages.length - 1 - i) * 200);
-        }
-		window.location.href = "page15.html";
-    }
+    updateZIndex();
+}
 
+function resetBook(event) {
 
+    event.stopPropagation();
+
+    pages.forEach(page => page.classList.remove("flipped"));
+
+    currentPage = 0;
+
+    updateZIndex();
+
+}
 		
 </script>
 </body>
