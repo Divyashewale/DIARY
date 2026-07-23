@@ -473,7 +473,8 @@ const CORRECT_PASSWORD = "Bumrah";
         window.location.href = "https://www.google.com"; // Redirects away
     }
 
-
+document.getElementById("diary-content").style.display = "block";
+nextScreen("book-screen");
 
     // Screen Switching logic
     function nextScreen(screenId) {
@@ -484,16 +485,38 @@ const CORRECT_PASSWORD = "Bumrah";
     }
 
     // Smooth Page Flipping Logic
-    let maxZIndex = 3; 
+    let maxZIndex = document.querySelectorAll(".page").length;
 
     // FIX: Automatically set correct z-index when page loads
-    document.addEventListener("DOMContentLoaded", () => {
-        const pages = document.querySelectorAll('.page');
-        pages.forEach((page, index) => {
-            page.style.zIndex = maxZIndex - index;
-        });
+
+document.addEventListener("DOMContentLoaded", () => {
+    const pages = document.querySelectorAll(".page");
+
+    // Total pages
+    maxZIndex = pages.length;
+
+    // Set initial z-index
+    pages.forEach((page, index) => {
+        page.style.zIndex = maxZIndex - index;
     });
 
+    // Open directly to the LAST page
+    for (let i = 0; i < pages.length - 1; i++) {
+        pages[i].classList.add("flipped");
+        pages[i].style.zIndex = i + 1;
+    }
+});
+
+
+
+
+
+
+
+
+
+
+		
     function turnPage(pageElement, pageNum) {
         if (!pageElement.classList.contains('flipped')) {
             // Flip Forward
