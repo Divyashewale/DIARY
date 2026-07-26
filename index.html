@@ -237,6 +237,10 @@
             font-size: 0.9rem;
             font-style: italic;
         }
+.no-anim * {
+    transition: none !important;
+}
+		
     </style>
 </head>
 <body>
@@ -487,6 +491,44 @@ if (passwordInput === CORRECT_PASSWORD) {
     window.location.href = "https://www.google.com";
 }
 
+const TARGET_PAGE = 19; 
+
+window.addEventListener('DOMContentLoaded', () => {
+    // Get all your page elements from the HTML
+    const pages = document.querySelectorAll('.page'); 
+
+    // Loop through and flip pages up to your target page
+    pages.forEach((page, index) => {
+        if (index < TARGET_PAGE) {
+            // Call your turnPage logic for each page before page 19
+            turnPage(page, index + 1); 
+        }
+    });
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    const diary = document.querySelector('.diary');
+    diary.classList.add('no-anim'); // Stop animations during setup
+
+    const pages = document.querySelectorAll('.page');
+    pages.forEach((page, index) => {
+        if (index < TARGET_PAGE) {
+            turnPage(page, index + 1);
+        }
+    });
+
+    // Re-enable smooth page turning after a tiny delay
+    setTimeout(() => {
+        diary.classList.remove('no-anim');
+    }, 100);
+});
+
+
+
+
+
+
+		
 // Screen Switching logic
 function nextScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
