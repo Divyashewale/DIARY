@@ -678,7 +678,28 @@ function resetBook(event) {
     },500);
 
 }
+function turnPage(pageElement, pageNum) {
 
+    showPetals();   // <-- Add this line
+
+    if (!pageElement.classList.contains('flipped')) {
+
+        pageElement.classList.add('flipped');
+
+        setTimeout(() => {
+            pageElement.style.zIndex = pageNum;
+        }, 300);
+
+    } else {
+
+        pageElement.classList.remove('flipped');
+
+        setTimeout(() => {
+            pageElement.style.zIndex = maxZIndex - pageNum + 1;
+        }, 100);
+
+    }
+}
 
 		
 </script>
