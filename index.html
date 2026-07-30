@@ -240,6 +240,40 @@
 .no-anim * {
     transition: none !important;
 }
+
+#petal-container{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:99999;
+}
+
+.petal{
+    position:absolute;
+    width:28px;
+    animation:petalFall 2s linear forwards;
+}
+
+@keyframes petalFall{
+
+0%{
+transform:translateY(-80px) rotate(0deg);
+opacity:1;
+}
+
+100%{
+transform:
+translateY(120vh)
+translateX(120px)
+rotate(720deg);
+opacity:0;
+}
+
+}
+
+
+
 		
     </style>
 </head>
@@ -599,6 +633,40 @@ function resetBook(event) {
 
 }
 
+		function showPetals(){
+
+    const container=document.getElementById("petal-container");
+
+    for(let i=0;i<25;i++){
+
+        const img=document.createElement("img");
+
+        img.src="images/petal.png"; // your own PNG
+
+        img.className="petal";
+
+        img.style.left=Math.random()*100+"vw";
+
+        img.style.top="-50px";
+
+        img.style.width=(18+Math.random()*18)+"px";
+
+        img.style.animationDelay=Math.random()*0.5+"s";
+
+        container.appendChild(img);
+
+        img.addEventListener("animationend",()=>{
+            img.remove();
+        });
+
+    }
+
+}
+
+
+
+		
 </script>
+	<div id="petal-container"></div>
 </body>
 </html>
